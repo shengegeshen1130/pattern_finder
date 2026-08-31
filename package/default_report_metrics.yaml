@@ -1,0 +1,76 @@
+report_metrics:
+  firing_cnt:
+    calc: 'COALESCE(count(1),0) as firing_cnt'
+    dependency:
+
+  firing_amt:
+    calc: 'COALESCE(sum({amt_col}),0) as firing_amt'
+    dependency:
+        - amt_col
+
+  target_cnt: 
+    calc: 'COALESCE(sum(case when {bad_tag} = 1 then 1 else 0 end),0) as target_cnt'
+    dependency: 
+        - tag_col
+  
+  target_amt:
+    calc: 'COALESCE(sum(case when {bad_tag} = 1 then {amt_col} else 0 end),0) as target_amt'
+    dependency: 
+        - tag_col
+        - amt_col
+
+  gloss:
+    calc: 'COALESCE(sum({gloss_col}),0) as gloss'
+    dependency: 
+        - gloss_col
+
+  nloss:
+    calc: 'COALESCE(sum({nloss_col}),0) as nloss'
+    dependency:
+        - nloss_col
+
+  target_cnt_rate:
+    calc: 'COALESCE(sum(case when {bad_tag} = 1 then 1 else 0 end)/(sum(case when {bad_tag} in (0,1) then 1 else 0 end)+0.0001),0) as target_cnt_rate'
+    dependency: 
+        - tag_col
+
+  target_amt_rate:
+    calc: 'COALESCE(sum(case when {bad_tag} = 1 then {amt_col} else 0 end)/(sum(case when {bad_tag} in (0,1) then {amt_col} else 0 end)+0.0001),0) as target_amt_rate'
+    dependency: 
+        - tag_col
+        - amt_col
+  
+  gloss_rate:
+    calc: 'COALESCE(sum({gloss_col})/(sum({amt_col})+0.0001),0) as gloss_rate'
+    dependency: 
+        - amt_col
+        - gloss_col
+
+  target_cnt_catch_rate:
+    calc: 'COALESCE(sum(case when {bad_tag} = 1 then 1 else 0 end) / ((sum(sum(case when {bad_tag} = 1 then 1 else 0 end)) OVER())+0.0001),0) as target_cnt_catch_rate'
+    dependency: 
+        - tag_col
+
+  target_amt_catch_rate:
+    calc: 'COALESCE(sum(case when {bad_tag} = 1 then {amt_col} else 0 end) / ((sum(sum(case when {bad_tag} = 1 then {amt_col} else 0 end)) OVER())+0.0001),0) as target_amt_catch_rate'
+    dependency: 
+        - tag_col
+        - amt_col
+
+  gloss_catch_rate:
+    calc: 'COALESCE(sum({gloss_col}) / ((sum(sum({gloss_col})) OVER())+0.0001),0) as gloss_catch_rate'
+    dependency: 
+        - gloss_col
+
+  nloss_catch_rate:
+    calc: 'COALESCE(sum({nloss_col}) / ((sum(sum({nloss_col})) OVER())+0.0001),0) as nloss_catch_rate'
+    dependency: 
+        - nloss_col
+
+kpi_map:
+  target_cnt: 
+    target_catch: target_cnt
+    target_rate: target_cnt_rate
+  target_amt:
+    target_catch: target_amt
+    target_rate: target_amt_rate

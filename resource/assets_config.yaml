@@ -1,0 +1,88 @@
+assets:
+    BankAccount: {'routingNumber':'string', 'creationTime':'bigint', 'lastModifiedTime':'bigint', 'baNumberHmac':'string', 'bankName':'string', 'wuserAchId':'string'}
+    Phone: {'phoneNumber':'string', 'lastModifiedTime':'bigint', 'creationTime':'bigint'}
+    VID: {'vid':'string', 'lastModifiedTime':'bigint', 'creationTime':'bigint'}
+    DocumentID: {'lastModifiedTime':'bigint', 'creationTime':'bigint','docIdVal':'string', 'docIssuerId':'string', 'issuerCntryCode':'string', 'issuerJursdctn':'string', 'docType':'string', 'docSubtype':'string', 'isPartial':'string'}
+    Email: {'emailAddress':'string', 'lastModifiedTime':'string', 'creationTime':'bigint', 'domain':'string'}
+    Address: {'address':'string', 'lastModifiedTime':'bigint', 'creationTime':'bigint'}
+    XLinkVertex: {'xLinkVertexID':'string','lastModifiedTime':'bigint', 'creationTime':'bigint'}
+    IP: {'lastModifiedTime':'bigint','ipNumer':'string','creationTime':'bigint','city':'string','latitude':'numeric','isp':'string','ipAddress':'string','countryCode':'string','domain':'string','region':'string','longitude':'numeric'}
+    Supercookie: {'superCookie':'string', 'lastModifiedTime':'bigint', 'creationTime':'bigint'}
+    URL: {'url':'string', 'domain':'string', 'tpd':'string', 'siteStatus':'string', 'firstUsed':'bigint', 'lastUsed':'bigint', 'lastModifiedTime':'bigint', 'creationTime':'bigint'}
+    CC: {'ccNumber':'string', 'ccType':'string', 'lastModifiedTime':'bigint', 'creationTime':'bigint'}
+    AppGuid: {'appGuid':'string','appId':'string','appVersion':'string','appFirstInstallTime':'bigint','appLastUpdateTime':'bigint','operatingSystemName':'string','systemVersionNumber':'string','browserVersionNumber':'string','browserName':'string','browserHash':'string','cloudIdentifier':'string','baseServiceSetId':'string','linkerId':'string','totalStorageSpace':'numeric','webMid':'string','networkOperator':'string','simOperatorName':'string','timezone':'string'}
+    FPTI_VID: {'id':'string', 'lastModifiedTime':'bigint', 'creationTime':'bigint'}
+    PPAccount: {'accountCreationTimestamp':'bigint','accountLanguage':'string','consumerSegment':'string','country':'string','firstName':'string','firstBuyingTimestamp':'bigint','lastName':'string','lifetimeTotSntSum':'numeric','userGroup':'string'}
+
+expand_ftr:
+    IP3:
+        calc: "REGEXP_EXTRACT(ipAddress, r'^\\d+\\.\\d+\\.\\d+') AS IP3"
+        dependency:
+            - ipAddress
+        assets: ['IP']
+    IP2:
+        calc: "REGEXP_EXTRACT(ipAddress, r'^\\d+\\.\\d+') AS IP2"
+        dependency:
+            - ipAddress
+        assets: ['IP']
+    daysFromCreTsSeg:
+        calc: "case when pit is not null then cast((cast(pit as bigint)-cast(creationTime as bigint))/86400000 as integer) else null end as daysFromCreTs"
+        dependency:
+            - pit 
+            - creationTime
+        assets: ['BankAccount', 'Phone', 'VID', 'DocumentID', 'Email', 'Address',
+       'XLinkVertex', 'IP', 'Supercookie', 'URL','CC','AppGuid', 'FPTI_VID']
+    daysFromLastModTs:
+        calc: "case when pit is not null then cast((cast(pit as bigint)-cast(lastModifiedTime as bigint))/86400000 as integer) else null end as daysFromLastModTs"
+        dependency:
+            - pit 
+            - lastModifiedTime
+        assets: ['BankAccount', 'Phone', 'VID', 'DocumentID', 'Email', 'Address',
+       'XLinkVertex', 'IP', 'Supercookie', 'URL','CC','AppGuid', 'FPTI_VID']
+    daysFromFirstUse:
+        calc: "case when pit is not null  then cast((cast(pit as bigint)-cast(firstUsed as bigint))/86400000 as integer) else null end as daysFromFirstUse"
+        dependency:
+            - pit 
+            - firstUsed
+        assets: ['URL']
+    daysFromLastUse:
+        calc: "case when pit is not null  then cast((cast(pit as bigint)-cast(lastUsed as bigint))/86400000 as integer) else null end as daysFromLastUse"
+        dependency:
+            - pit 
+            - lastUsed
+        assets: ['URL']
+    daysFromInstallTs:
+        calc: "case when pit is not null  then cast((cast(pit as bigint)-cast(appFirstInstallTime as bigint))/86400000 as integer) else null end as daysFromInstallTs"
+        dependency:
+            - pit 
+            - appFirstInstallTime
+        assets: ['AppGuid']
+    daysFromLastUpdtTs:
+        calc: "case when pit is not null  then cast((cast(pit as bigint)-cast(appLastUpdateTime as bigint))/86400000 as integer) else null end as daysFromLastUpdtTs"
+        dependency:
+            - pit 
+            - appLastUpdateTime
+        assets: ['AppGuid']
+    daysFromAcctCreTs:
+        calc: "case when pit is not null  then cast((cast(pit as bigint)-cast(accountCreationTimestamp as bigint))/86400000 as integer) else null end as daysFromAcctCreTs"
+        dependency:
+            - pit 
+            - accountCreationTimestamp
+        assets: ['PPAccount']
+    daysFromFirstBuy:
+        calc: "case when pit is not null  then cast((cast(pit as bigint)-cast(firstBuyingTimestamp as bigint))/86400000 as integer) else null end as daysFromFirstBuy"
+        dependency:
+            - pit 
+            - firstBuyingTimestamp
+        assets: ['PPAccount']
+    fullName:
+        calc: "firstName||' '||lastName as fullName"
+        dependency:
+            - firstName
+            - lastName
+        assets: ['PPAccount']
+    
+
+
+
+

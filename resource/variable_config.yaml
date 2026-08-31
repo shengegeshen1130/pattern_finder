@@ -1,0 +1,19 @@
+string:
+  ignore_values: ['NO_MISMATCH','BEACON_MISSING_ELEMENT','NORMAL','NON_GIB','NON_BOGUS','CITY_MATCH','VALID_PHONE',
+                   'SHIP_NAME_MATCH_BILL_NAME','FULL_MATCH','SHIP_NAME_MATCH_ACCOUNT_NAME','STATE_MATCH',
+                   'REASONABLE_HOPPING','NO_HOPPING','OTHER','COUNTRY_MATCH','MATCH_COUNTRY','MATCH_CITY','MATCH_STATE','NO_DATA','CONS_TIMEZONE','NO_RCVR_ID','06_normal',
+                   'NO_FRAUDNET_DATA','REGION_MATCH','NEUTRAL','FULL_CTRY_MATCH','NULL','NO_PHONE_INFO','NO_RADD_DATA',
+                   'FULL_NAME_MATCH','GOOD','RCVR_IS_NOT_PEEKED','CONS_COUNTER_PARTY','YOUNG_RCVR','NEUTRAL',
+                   'NO_FRAUDNET_OR_MAGNES','0','NEUTRAL_PROB_COLLUSION','NO_BOT_RISK','NO_FRAUDNET_DATA',
+                   'MOBILE_FRAUDNET','NO_NEW_CTRY_MATCH_MULT_CTRY_ACCT','NO_NEW_CTRY_MATCH_SINGLE_CTRY_ACCT']
+
+bool:
+  false_vars: ['RI_address_zip_matched','GEO_IP_COUNTRY_MATCH','U1_name_email_matched','SN_is_IP_country_match']
+
+number:
+  fix_bins_setting:
+    days|tof|sdof: [1,7,30,90,180,360,720]
+
+  direction_setting:
+    up: 'score|lifetimetotsntsum|usd_amount|badrate|loss_ratio|grph_rbb|grph_cnt_bad|bad_cnt|restr_ratio|cnt_all'
+    down: 'days|tof|sdof'
